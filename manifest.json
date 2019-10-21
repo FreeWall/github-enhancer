@@ -1,0 +1,17 @@
+{
+  "name": "DeployHQ for Github",
+  "version": "1.0",
+  "description": "Deployments by DeployHQ rendering in GitHub pull requests",
+  "permissions": ["*://*.github.com/*", "*://*.deployhq.com/*", "activeTab", "declarativeContent", "storage"],
+  "background": {
+    "scripts": ["jquery-3.4.1.min.js","background.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches":["https://github.com/ateli-development/shipgratis/pulls*updated-desc*closed"],
+      "js":["jquery-3.4.1.min.js","test.js"]
+    }
+  ],
+  "manifest_version": 2
+}
