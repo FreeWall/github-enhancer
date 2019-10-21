@@ -19,6 +19,7 @@ $(function(){
 		$("a[data-hovercard-type=\"pull_request\"]",row).html("Manual deploy of "+deployment['project']['name']);
 		$("span[aria-label=\"Merged pull request\"]",row).html("<img src='"+chrome.extension.getURL('deployhq.png')+"' style='width:32px;vertical-align:middle;margin-right:7px;margin-left:2px;margin-top:5px;'/>");
 		let $date = $("span.issue-meta-section.ml-2",row).first().clone();
+		$date.html($date.html().replace('updated','deployed'));
 		let date = new Date(deployment['finishedAt']);
 		$("relative-time",$date).attr("datetime", deployment['finishedAt']).attr("title", date.toLocaleString());
 		$("div.mt-1.text-small",row).html("Deployed by <a data-hovercard-type='user' href='javascript:void(0);'>"+deployment['user']['name']+"</a> • ");
