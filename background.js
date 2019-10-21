@@ -17,6 +17,12 @@ chrome.runtime.onMessage.addListener(
             fetch(url)
                 .then(response => response.text())
                 .then(response => sendResponse(response));
+            /*fetch(url, {
+				headers: {
+					"Accept": "application/json",
+					'Authorization': 'Basic '+btoa('user@domain.com:api-key'),
+				}
+            })*/
             return true;
         }
     }
