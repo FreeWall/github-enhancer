@@ -13,5 +13,6 @@
       "js":["jquery-3.4.1.min.js","test.js"]
     }
   ],
+  "web_accessible_resources": ["deployhq.png"],
   "manifest_version": 2
 }

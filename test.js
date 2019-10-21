@@ -15,8 +15,9 @@ $(function(){
 	);
 
 	function deploymentToRow(deployment,row){
-		$("label input",row).css("visibility", "hidden").css("pointer-events", "none");
+		$("label",row).remove();
 		$("a[data-hovercard-type=\"pull_request\"]",row).html("Manual deploy of "+deployment['project']['name']);
+		$("span[aria-label=\"Merged pull request\"]",row).html("<img src='"+chrome.extension.getURL('deployhq.png')+"' style='width:32px;vertical-align:middle;margin-right:7px;margin-left:2px;margin-top:5px;'/>");
 		let $date = $("span.issue-meta-section.ml-2",row).first().clone();
 		let date = new Date(deployment['finishedAt']);
 		$("relative-time",$date).attr("datetime", deployment['finishedAt']).attr("title", date.toLocaleString());
@@ -29,5 +30,6 @@ $(function(){
 			$("div.mt-1.text-small",row).append("<a class='tooltipped' aria-label='required' href='javascript:void(0);'>"+deployment['status']+"</a>");
 		}
 		$("div.mt-1.text-small",row).append($date);
+		row.css("background","#F4F4F4");
 	}
 });
