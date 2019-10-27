@@ -9,10 +9,12 @@
   },
   "content_scripts": [
     {
-      "matches":["https://github.com/ateli-development/shipgratis/pulls*updated-desc*closed"],
+      "matches":["https://github.com/ateli-development/shipgratis*"],
+      "run_at": "document_start",
+      "all_frames": true,
       "js":["jquery-3.4.1.min.js","test.js"]
     }
   ],
-  "web_accessible_resources": ["deployhq.png"],
+  "web_accessible_resources": ["deployhq.png","styles.css"],
   "manifest_version": 2
 }
