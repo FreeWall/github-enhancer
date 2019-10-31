@@ -1,7 +1,7 @@
 {
   "name": "GitHub Enhancer",
-  "version": "1.0",
-  "description": "Rendering deployments by DeployHQ and custom CSS styles in GitHub pull requests",
+  "version": "1.1",
+  "description": "Deployments by DeployHQ and custom CSS styles in GitHub pull requests",
   "permissions": ["*://*.github.com/*", "activeTab", "declarativeContent", "storage"],
   "background": {
     "scripts": ["settings.js","background.js"],
