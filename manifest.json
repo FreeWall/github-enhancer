@@ -8,7 +8,11 @@
     "persistent": true
   },
   "page_action": {
-    "default_popup": "settings/settingsMenu.html"
+    "default_popup": "settings/settingsMenu.html",
+    "default_icon": {
+      "32": "static/github-32.png",
+      "64": "static/github-64.png"
+    }
   },
   "content_scripts": [
     {
@@ -18,6 +22,10 @@
       "js":["static/jquery-3.4.1.min.js","content.js"]
     }
   ],
+  "icons": {
+    "32": "static/github-32.png",
+    "64": "static/github-64.png"
+  },
   "web_accessible_resources": ["static/deployhq.png","static/styles.css"],
   "manifest_version": 2
 }
