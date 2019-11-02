@@ -4,11 +4,11 @@
   "description": "Deployments by DeployHQ and custom CSS styles in GitHub pull requests",
   "permissions": ["*://*.github.com/*", "activeTab", "declarativeContent", "storage"],
   "background": {
-    "scripts": ["settings/settings.js","background.js"],
+    "scripts": ["js/settings.js","js/background.js"],
     "persistent": true
   },
   "page_action": {
-    "default_popup": "settings/settingsMenu.html",
+    "default_popup": "popup/index.html",
     "default_icon": {
       "32": "static/github-32.png",
       "64": "static/github-64.png"
@@ -19,7 +19,7 @@
       "matches":["https://github.com/ateli-development/shipgratis*"],
       "run_at": "document_start",
       "all_frames": true,
-      "js":["static/jquery-3.4.1.min.js","content.js"]
+      "js":["static/jquery-3.4.1.min.js","js/content.js"]
     }
   ],
   "icons": {

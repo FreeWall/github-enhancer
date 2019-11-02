@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="styles.css"/>
+	<script src="/static/jquery-3.4.1.min.js"></script>
+	<script src="/js/settings.js"></script>
+	<script src="popup.js"></script>
+</head>
+<body>
+<div class="header">
+	<img src="/static/github-32.png"/><h1>GitHub Enhancer</h1>
+</div>
+<div class="settings">
+	<div class="group">
+		<h2>General</h2>
+		<label class="row">
+			<div class="label">Full width page</div>
+			<div class="checkbox">
+				<input data-settings="fullWidthEnabled" type="checkbox"/>
+			</div>
+		</label>
+	</div>
+	<div class="group">
+		<h2>Pull Requests</h2>
+		<label class="row">
+			<div class="label">Custom CSS styles</div>
+			<div class="checkbox">
+				<input data-settings="stylesEnabled" type="checkbox"/>
+			</div>
+		</label>
+		<label class="row">
+			<div class="label">Move Drafts to bottom</div>
+			<div class="checkbox">
+				<input data-settings="stylesEnabled" type="checkbox"/>
+			</div>
+		</label>
+		<label class="row">
+			<div class="label">Default sort by recently updated</div>
+			<div class="checkbox">
+				<input data-settings="updatedSortEnabled" type="checkbox"/>
+			</div>
+		</label>
+		<label class="row">
+			<div class="label">DeployHQ deployments</div>
+			<div class="checkbox">
+				<input data-settings="updatedSortEnabled" type="checkbox"/>
+			</div>
+		</label>
+	</div>
+</div>
+</body>
+</html>

@@ -10,7 +10,7 @@ chrome.runtime.onInstalled.addListener(function() {
             actions: [new chrome.declarativeContent.ShowPageAction()]
         }]);
     });
-    settings.setStylesEnabled(true);
+    settings.install();
     loadSettings();
 });
 
@@ -25,6 +25,8 @@ chrome.runtime.onMessage.addListener(
             fetch(url).then(response => response.json()).then(response => sendResponse(response));
         } else if (request.channel == "styles") {
             sendResponse(stylesContent);
+        } else if (request.channel == "settings") {
+            settings.load();
         }
         return true;
     }

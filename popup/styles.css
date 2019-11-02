@@ -1,0 +1,65 @@
+body {
+    min-width:300px;
+    margin:0px;
+    background:#F4F4F4;
+}
+div.header {
+    padding:20px;
+    background:#FFFFFF;
+    border-bottom:1px solid #DDDDDD;
+}
+.header img {
+    display:inline-block;
+    vertical-align:middle;
+    margin-right:14px;
+}
+.header h1 {
+    display:inline-block;
+    vertical-align:middle;
+    font-size:2em;
+    line-height:1em;
+    margin:0px;
+}
+div.settings {
+    padding:20px;
+}
+.settings div.group {
+    margin-bottom:20px;
+}
+.settings div.group:last-child {
+    margin-bottom:0px;
+}
+.settings h2 {
+    margin:0px;
+    margin-bottom:12px;
+}
+.settings label.row {
+    display:table;
+    box-sizing:border-box;
+    width:100%;
+    padding:6px 10px;
+    padding-right:6px;
+    background:#FFFFFF;
+    border:1px solid #DDDDDD;
+    font-weight:600;
+    border-radius:4px;
+    margin-bottom:10px;
+    user-select:none;
+    cursor:pointer;
+}
+.settings label.row:last-child {
+    margin-bottom:0px;
+}
+.settings .row div.label {
+    display:table-cell;
+    vertical-align:middle;
+}
+.settings .row div.checkbox {
+    display:table-cell;
+    vertical-align:middle;
+    text-align:right;
+}
+.settings .row .checkbox input {
+    width:16px;
+    height:16px;
+}
