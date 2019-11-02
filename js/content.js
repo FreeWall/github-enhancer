@@ -7,6 +7,9 @@ chrome.runtime.onMessage.addListener(
                 if (request.settings[Settings.DEPLOYMENTS]) {
                     loadDeployments();
                 }
+                if (request.settings[Settings.UPDATED_SORT]) {
+                    sortByRecentlyUpdated();
+                }
             } else if (request.status == "complete") {
                 if (request.settings[Settings.DEPLOYMENTS]) {
                     renderDeployments();
@@ -63,11 +66,27 @@ function markRequestsForMe() {
     });
 }
 
+function sortByRecentlyUpdated() {
+    if (/^.*\/pulls.*$/.test(location.href) && !/^.*\/pulls.*(sort).*$/.test(location.href) && !/^.*\/pulls.*(updated-desc).*$/.test(location.href)) {
+        let url = new URL(location.href);
+        let q = url.searchParams.get('q');
+        if (q) {
+            let args = q.split(' ');
+            args.push("sort:updated-desc");
+            url.searchParams.set('q', args.join(' '));
+        } else {
+            url.searchParams.set('q', "is:pr is:open sort:updated-desc");
+        }
+        location.href = url;
+    }
+}
+
 function isClosedPullRequestsPage() {
     return /^.*\/pulls.*(updated-desc).*$/.test(location.href) && /^.*\/pulls.*(closed).*$/.test(location.href) && !/^.*\/pulls.*(page=(?!(?:1))\d+).*$/.test(location.href);
 }
 
 var deployments = null;
+
 function loadDeployments() {
     deployments = null;
     if (this.isClosedPullRequestsPage()) {
