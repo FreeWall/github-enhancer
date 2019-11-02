@@ -11,7 +11,8 @@
     "default_popup": "popup/index.html",
     "default_icon": {
       "32": "static/github-32.png",
-      "64": "static/github-64.png"
+      "64": "static/github-64.png",
+      "128": "static/github-128.png"
     }
   },
   "content_scripts": [
@@ -24,7 +25,8 @@
   ],
   "icons": {
     "32": "static/github-32.png",
-    "64": "static/github-64.png"
+    "64": "static/github-64.png",
+    "128": "static/github-128.png"
   },
   "web_accessible_resources": ["static/deployhq.png","static/styles.css"],
   "manifest_version": 2
