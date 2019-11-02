@@ -24,7 +24,7 @@ chrome.runtime.onMessage.addListener(
             var url = "https://www.michalvanek.net/ateli/deployhq.php";
             fetch(url).then(response => response.json()).then(response => sendResponse(response));
         } else if (request.channel == "styles") {
-            var content = "";
+            var content = stylesContents['default'];
             for (let key in Settings.STYLES) {
                 if (typeof stylesContents[key] !== "undefined") {
                     content += stylesContents[key];
@@ -47,9 +47,13 @@ settings.onChange(function() {
 function loadSettings() {
     stylesContents = {};
     settings.load(function() {
+        var url = chrome.extension.getURL("static/styles/default.css");
+        fetch(url).then(response => response.text()).then(response => {
+            stylesContents['default'] = response;
+        });
         for (let key in Settings.STYLES) {
             if (settings.get(key)) {
-                var url = chrome.extension.getURL(Settings.STYLES[key]);
+                url = chrome.extension.getURL(Settings.STYLES[key]);
                 fetch(url).then(response => response.text()).then(response => {
                     stylesContents[key] = response;
                 });

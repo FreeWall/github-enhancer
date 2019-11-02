@@ -1,3 +1,6 @@
+div.deploy-row {
+    display:block;
+}
 div.deployment-status {
     color: #FFFFFF !important;
     display:inline-block;
