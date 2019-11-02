@@ -16,6 +16,7 @@ chrome.runtime.onMessage.addListener(
                 }
                 if (request.settings[Settings.STYLE_PULL_REQUESTS]) {
                     markRequestsForMe();
+                    markDrafts();
                 }
             }
         } else if (request.channel == "settings") {
@@ -42,9 +43,13 @@ function updateStyles() {
     );
 }
 
-function moveDraftsToBottom() {
+function markDrafts() {
     var $row = $("[aria-label=\"Open draft pull request\"]").closest("div.js-issue-row");
     $row.toggleClass("githubenhancer-draft-pullrequest", true);
+}
+
+function moveDraftsToBottom() {
+    var $row = $("[aria-label=\"Open draft pull request\"]").closest("div.js-issue-row");
     var $parent = $row.parent();
     $row.detach().appendTo($parent);
 }
