@@ -1,0 +1,11 @@
+body:not(.full-width) .container-lg {
+    max-width: 90%;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.container-lg .col-9 {
+    width: 85%;
+}
+.container {
+    width: 90%;
+}

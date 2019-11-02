@@ -2,6 +2,7 @@ var Settings = function() {
 
     var _this = this;
     this.values = {};
+    this.onChangeCallback = function() {};
 
     this.install = function() {
         for (let i in Settings.VALUES) {
@@ -25,6 +26,7 @@ var Settings = function() {
 
     this.save = function() {
         chrome.storage.sync.set(this.values);
+        this.onChangeCallback();
     };
 
     this.set = function(key, value) {
@@ -36,19 +38,27 @@ var Settings = function() {
         return this.values[key];
     };
 
-    this.isStylesEnabled = function() {
-        return this.get(Settings.STYLES_ENABLED);
-    };
-
-    this.isUpdatedSortEnabled = function() {
-        return this.get(Settings.UPDATED_SORT_ENABLED);
+    this.onChange = function(callback) {
+        this.onChangeCallback = callback;
     };
 };
 
-Settings.STYLES_ENABLED = "stylesEnabled";
-Settings.UPDATED_SORT_ENABLED = "updatedSortEnabled";
+Settings.FULL_WIDTH = "fullWidth";
+Settings.STYLE_PULL_REQUESTS = "stylePullRequests";
+Settings.DRAFTS_TO_BOTTOM = "draftsToBottom";
+Settings.UPDATED_SORT = "updatedSort";
+Settings.DEPLOYMENTS = "deployments";
 
 Settings.VALUES = [
-    Settings.STYLES_ENABLED,
-    Settings.UPDATED_SORT_ENABLED
+    Settings.FULL_WIDTH,
+    Settings.STYLE_PULL_REQUESTS,
+    Settings.DRAFTS_TO_BOTTOM,
+    Settings.UPDATED_SORT,
+    Settings.DEPLOYMENTS
 ];
+
+Settings.STYLES = {
+    [Settings.FULL_WIDTH]: "static/styles/fullwidth.css",
+    [Settings.STYLE_PULL_REQUESTS]: "static/styles/pullrequests.css",
+    [Settings.DEPLOYMENTS]: "static/styles/deployments.css",
+};

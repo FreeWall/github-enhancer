@@ -1,32 +1,50 @@
-chrome.runtime.sendMessage(
-    {channel: "styles"},
-    function(response) {
-        let style = document.createElement('style');
-        style.type = "text/css";
-        style.innerHTML = response;
-        document.getElementsByTagName('head')[0].appendChild(style);
-    }
-);
+updateStyles();
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         if (request.channel == "onUpdated") {
             if (typeof request.status === "undefined" || request.status == "loading") {
-                loadDeployments();
+                if (request.settings[Settings.DEPLOYMENTS]) {
+                    loadDeployments();
+                }
+            } else if (request.status == "complete") {
+                if (request.settings[Settings.DEPLOYMENTS]) {
+                    renderDeployments();
+                }
+                if (request.settings[Settings.DRAFTS_TO_BOTTOM]) {
+                    moveDraftsToBottom();
+                }
+                if (request.settings[Settings.STYLE_PULL_REQUESTS]) {
+                    markRequestsForMe();
+                }
             }
-            else if (request.status == "complete") {
-                renderDeployments();
-                moveDraftsToBottom();
-                markRequestsForMe();
-            }
+        } else if (request.channel == "settings") {
+            updateStyles()
         }
         return true;
     }
 );
 
+function updateStyles() {
+    chrome.runtime.sendMessage(
+        {channel: "styles"},
+        function(response) {
+            let style = document.getElementById('data-githubenhancer-styles');
+            if (style != null) {
+                style.parentNode.removeChild(style);
+            }
+            style = document.createElement('style');
+            style.type = "text/css";
+            style.id = 'data-githubenhancer-styles';
+            style.innerHTML = response;
+            document.getElementsByTagName('head')[0].appendChild(style);
+        }
+    );
+}
+
 function moveDraftsToBottom() {
     var $row = $("[aria-label=\"Open draft pull request\"]").closest("div.js-issue-row");
-    $row.toggleClass("stylish-draft-pullrequest", true);
+    $row.toggleClass("githubenhancer-draft-pullrequest", true);
     var $parent = $row.parent();
     $row.detach().appendTo($parent);
 }
@@ -35,7 +53,7 @@ function markRequestsForMe() {
     var user = $(".Header .Header-link img.avatar").attr("alt").substr(1);
     $("div.js-issue-row").each(function() {
         if ($(this).find("img[alt='@" + user + "']").length > 0 || $(this).find("a[data-hovercard-type='user']").html().trim() == user) {
-            $(this).toggleClass("stylish-foryou-pullrequest", true);
+            $(this).toggleClass("githubenhancer-foryou-pullrequest", true);
         }
     });
 }
@@ -67,6 +85,7 @@ function renderDeployments() {
     }
     $("div.Box-row.deploy-row").remove();
     for (let i in deployments) {
+        if (deployments[i]['status'] != "completed") continue;
         var row = $("div.Box-row").first().clone();
         deploymentToRow(deployments[i], row);
         $(".js-active-navigation-container").prepend(row);
@@ -78,7 +97,7 @@ function renderDeployments() {
 
 function deploymentToRow(deployment, row) {
     row.toggleClass("deploy-row", true);
-    row.toggleClass("unread", false).toggleClass("read", true).toggleClass("stylish-foryou-pullrequest", false);
+    row.toggleClass("unread", false).toggleClass("read", true).toggleClass("githubenhancer-foryou-pullrequest", false);
     $("label", row).remove();
     $(".d-inline-block.mr-1", row).remove();
     $(".float-right.col-3", row).remove();

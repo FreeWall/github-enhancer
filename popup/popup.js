@@ -1,4 +1,4 @@
-var settings = new Settings();
+var settings = chrome.extension.getBackgroundPage().settings;
 
 $(function() {
     settings.load(function() {

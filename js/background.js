@@ -1,7 +1,7 @@
 'use strict';
 
 var settings = new Settings();
-var stylesContent;
+var stylesContents = {};
 
 chrome.runtime.onInstalled.addListener(function() {
     chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
@@ -24,25 +24,43 @@ chrome.runtime.onMessage.addListener(
             var url = "https://www.michalvanek.net/ateli/deployhq.php";
             fetch(url).then(response => response.json()).then(response => sendResponse(response));
         } else if (request.channel == "styles") {
-            sendResponse(stylesContent);
-        } else if (request.channel == "settings") {
-            settings.load();
+            var content = "";
+            for (let key in Settings.STYLES) {
+                if (typeof stylesContents[key] !== "undefined") {
+                    content += stylesContents[key];
+                }
+            }
+            sendResponse(content);
         }
         return true;
     }
 );
 
 chrome.tabs.onUpdated.addListener(function(tabId, info, tab) {
-    chrome.tabs.sendMessage(tabId, {channel: "onUpdated", status: info.status});
+    chrome.tabs.sendMessage(tabId, {channel: "onUpdated", status: info.status, settings: settings.values});
+});
+
+settings.onChange(function() {
+    loadSettings();
 });
 
 function loadSettings() {
+    stylesContents = {};
     settings.load(function() {
-        if (settings.isStylesEnabled()) {
-            var url = chrome.extension.getURL('static/styles.css');
-            fetch(url).then(response => response.text()).then(response => {
-                stylesContent = response;
-            });
+        for (let key in Settings.STYLES) {
+            if (settings.get(key)) {
+                var url = chrome.extension.getURL(Settings.STYLES[key]);
+                fetch(url).then(response => response.text()).then(response => {
+                    stylesContents[key] = response;
+                });
+            }
         }
+        setTimeout(function() {
+            chrome.tabs.query({}, function(tabs) {
+                for (var i=0; i<tabs.length; ++i) {
+                    chrome.tabs.sendMessage(tabs[i].id, {channel: "settings"});
+                }
+            });
+        }, 100);
     });
 }
