@@ -21,8 +21,24 @@ chrome.runtime.onStartup.addListener(function() {
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         if (request.channel == "deployments") {
-            var url = "https://www.michalvanek.net/ateli/deployhq.php";
-            fetch(url).then(response => response.json()).then(response => sendResponse(response));
+            let repository = sender.url.match('\/github\.com\/([a-zA-Z0-9-_.]*\/[a-zA-Z0-9-_.]*)');
+            if (repository) {
+                repository = repository[1];
+                if (typeof settings.get(Settings.DEPLOYMENTS)[repository] !== "undefined") {
+                    fetch(settings.get(Settings.DEPLOYMENTS)[repository]['url'], {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Basic ' + btoa(settings.get(Settings.DEPLOYMENTS)[repository]['user'] + ":" + settings.get(Settings.DEPLOYMENTS)[repository]['key']),
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(response => sendResponse(response))
+                        .catch(error => sendResponse({}));
+                } else {
+                    sendResponse({});
+                }
+            }
         } else if (request.channel == "styles") {
             var content = stylesContents['default'];
             for (let key in Settings.STYLES) {
@@ -41,10 +57,11 @@ chrome.tabs.onUpdated.addListener(function(tabId, info, tab) {
 });
 
 settings.onChange(function() {
-    loadSettings();
+    loadSettings(true);
 });
 
-function loadSettings() {
+function loadSettings(reload) {
+    reload = !!reload;
     stylesContents = {};
     settings.load(function() {
         var url = chrome.extension.getURL("static/styles/default.css");
@@ -59,12 +76,14 @@ function loadSettings() {
                 });
             }
         }
-        setTimeout(function() {
-            chrome.tabs.query({}, function(tabs) {
-                for (var i=0; i<tabs.length; ++i) {
-                    chrome.tabs.sendMessage(tabs[i].id, {channel: "settings"});
-                }
-            });
-        }, 100);
+        if (reload) {
+            setTimeout(function() {
+                chrome.tabs.query({}, function(tabs) {
+                    for (var i=0; i<tabs.length; ++i) {
+                        chrome.tabs.sendMessage(tabs[i].id, {channel: "settings"});
+                    }
+                });
+            }, 100);
+        }
     });
 }

@@ -1,8 +1,12 @@
 updateStyles();
 
+var settings = null;
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         if (request.channel == "onUpdated") {
+            if (typeof request.settings !== "undefined") {
+                settings = request.settings;
+            }
             if (typeof request.status === "undefined" || request.status == "loading") {
                 if (request.settings[Settings.DEPLOYMENTS]) {
                     loadDeployments();
@@ -85,26 +89,36 @@ function isClosedPullRequestsPage() {
     return /^.*\/pulls.*(updated-desc).*$/.test(location.href) && /^.*\/pulls.*(closed).*$/.test(location.href) && !/^.*\/pulls.*(page=(?!(?:1))\d+).*$/.test(location.href);
 }
 
-var deployments = null;
+var deployments = -1;
+var deploymentsLoading = false;
 
 function loadDeployments() {
-    deployments = null;
-    if (this.isClosedPullRequestsPage()) {
-        chrome.runtime.sendMessage(
-            {channel: "deployments"},
-            function(response) {
-                deployments = response['records'];
-            }
-        );
+    if (deploymentsLoading) {
+        return;
     }
+    deployments = -1;
+    if (!this.isClosedPullRequestsPage()) {
+        return;
+    }
+    deploymentsLoading = true;
+    chrome.runtime.sendMessage(
+        {channel: "deployments"},
+        function(response) {
+            deployments = response['records'];
+        }
+    );
 }
 
 function renderDeployments() {
     if (!this.isClosedPullRequestsPage()) {
         return;
     }
-    if (deployments == null) {
+    if (deployments == -1) {
         setTimeout(renderDeployments, 100);
+        return;
+    }
+    deploymentsLoading = false;
+    if (deployments == null || deployments.length == 0) {
         return;
     }
     $("div.Box-row.deploy-row").remove();

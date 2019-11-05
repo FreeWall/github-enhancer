@@ -1,8 +1,8 @@
 {
   "name": "GitHub Enhancer",
-  "version": "1.5",
+  "version": "1.6",
   "description": "Deployments by DeployHQ and custom CSS styles in GitHub pull requests",
-  "permissions": ["*://*.github.com/*", "declarativeContent", "storage"],
+  "permissions": ["*://*.github.com/*", "*://*.deployhq.com/*", "*://*.michalvanek.net/*", "declarativeContent", "storage"],
   "background": {
     "scripts": ["js/settings.js","js/background.js"],
     "persistent": true
@@ -17,7 +17,7 @@
   },
   "content_scripts": [
     {
-      "matches":["https://github.com/ateli-development/shipgratis*"],
+      "matches":["https://github.com/*"],
       "run_at": "document_start",
       "all_frames": true,
       "js":["static/jquery-3.4.1.min.js","js/settings.js","js/content.js"]

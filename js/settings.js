@@ -5,9 +5,11 @@ var Settings = function() {
     this.onChangeCallback = function() {};
 
     this.install = function() {
-        for (let i in Settings.VALUES) {
-            this.values[Settings.VALUES[i]] = true;
-        }
+        this.values[Settings.FULL_WIDTH] = true;
+        this.values[Settings.STYLE_PULL_REQUESTS] = true;
+        this.values[Settings.DRAFTS_TO_BOTTOM] = true;
+        this.values[Settings.UPDATED_SORT] = true;
+        this.values[Settings.DEPLOYMENTS] = {};
         this.save();
     };
 
@@ -60,5 +62,4 @@ Settings.VALUES = [
 Settings.STYLES = {
     [Settings.FULL_WIDTH]: "static/styles/fullwidth.css",
     [Settings.STYLE_PULL_REQUESTS]: "static/styles/pullrequests.css",
-    [Settings.DEPLOYMENTS]: "static/styles/deployments.css",
 };
