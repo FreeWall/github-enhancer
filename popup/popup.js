@@ -14,31 +14,40 @@ $(function() {
                 let repository = tabs[i].url.match('\/github\.com\/([a-zA-Z0-9-_.]*\/[a-zA-Z0-9-_.]*)');
                 if (repository) {
                     repository = repository[1];
-                    $("[data-js=deployment-repository]").append('\
-                    <label class="row double">\
-                        <div class="label">'+repository+'</div>\
-                        <div class="checkbox">\
-                            <input data-repository="'+repository+'" type="checkbox"/>\
-                        </div>\
-                    </label>\
-                    <div class="subgroup" data-repository-group="'+repository+'" style="display:none">\
-                        <div class="subrow">\
-                            <input data-repository-settings="url" placeholder="https://deployhq.com/projects/your-project/" type="text"/>\
-                        </div>\
-                        <div class="subrow">\
-                            <input data-repository-settings="user" placeholder="E-mail address" type="text"/>\
-                        </div>\
-                        \<div class="subrow">\
-                            <input data-repository-settings="key" placeholder="API key" type="text"/>\
-                        </div>\
-                    </div>').show();
-                    if (typeof deployments[repository] !== "undefined") {
-                        $("[data-repository="+$.escapeSelector(repository)+"]").prop("checked", true);
-                        $("[data-repository-group="+$.escapeSelector(repository)+"]").show();
-                        for (let key in deployments[repository]) {
-                            $("[data-repository-settings=" + $.escapeSelector(key) + "]").val(deployments[repository][key]);
-                        }
+                    if (typeof deployments[repository] === "undefined") {
+                        deployments[repository] = undefined;
                     }
+                }
+            }
+        }
+        for (let repository in deployments) {
+            $("[data-js=deployment-repository]").append('\
+            <label class="row double">\
+                <div class="label">' + repository + '</div>\
+                <div class="checkbox">\
+                    <input data-repository="' + repository + '" type="checkbox"/>\
+                </div>\
+            </label>\
+            <div class="subgroup" data-repository-group="' + repository + '" style="display:none">\
+                <div class="subrow">\
+                    <input data-repository-settings="url" placeholder="https://deployhq.com/projects/your-project/" type="text"/>\
+                </div>\
+                <div class="subrow">\
+                    <input data-repository-settings="user" placeholder="E-mail address" type="text"/>\
+                </div>\
+                \<div class="subrow">\
+                    <input data-repository-settings="key" placeholder="API key" type="text"/>\
+                </div>\
+            </div>').show();
+            if (typeof deployments[repository] !== "undefined") {
+                $("[data-repository=" + $.escapeSelector(repository) + "]").prop("checked", true);
+                $("[data-repository-group=" + $.escapeSelector(repository) + "]").show();
+                for (let key in deployments[repository]) {
+                    if (key == "key" && deployments[repository][key].length > 8) {
+                        let stars = deployments[repository][key].length - 8;
+                        deployments[repository][key] = deployments[repository][key].substr(0, 4) + "*".repeat(stars) + deployments[repository][key].substr(-4);
+                    }
+                    $("[data-repository-group=" + $.escapeSelector(repository) + "] [data-repository-settings=" + $.escapeSelector(key) + "]").val(deployments[repository][key]);
                 }
             }
         }
@@ -61,9 +70,14 @@ $(function() {
         $("input[data-repository]").each(function() {
             let repository = $(this).attr("data-repository");
             if ($(this).is(":checked")) {
+                let oldDeployment = deployments[repository];
                 deployments[repository] = {};
                 $("[data-repository-group=" + $.escapeSelector(repository) + "] [data-repository-settings]").each(function() {
-                    deployments[repository][$(this).attr("data-repository-settings")] = $(this).val();
+                    let key = $(this).attr("data-repository-settings");
+                    deployments[repository][key] = $(this).val();
+                    if (typeof oldDeployment !== "undefined" && key == "key" && deployments[repository][key].indexOf("*") !== -1) {
+                        deployments[repository][key] = oldDeployment[key];
+                    }
                 });
             } else {
                 delete deployments[repository];

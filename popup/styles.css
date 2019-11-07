@@ -70,9 +70,10 @@ div.settings {
 .settings .subrow input {
     width:100%;
     box-sizing:border-box;
-    padding:6px 10px;
+    padding:8px 10px;
     background:#FFFFFF;
     border:1px solid #DDDDDD;
+    border-left:4px solid #CCCCCC;
     border-top:0 none;
     font-size:1em;
     font-weight:400;

@@ -1,8 +1,8 @@
 {
   "name": "GitHub Enhancer",
-  "version": "1.6",
+  "version": "1.7",
   "description": "Deployments by DeployHQ and custom CSS styles in GitHub pull requests",
-  "permissions": ["*://*.github.com/*", "*://*.deployhq.com/*", "*://*.michalvanek.net/*", "declarativeContent", "storage"],
+  "permissions": ["*://*.github.com/*", "*://*.deployhq.com/*", "declarativeContent", "storage"],
   "background": {
     "scripts": ["js/settings.js","js/background.js"],
     "persistent": true
