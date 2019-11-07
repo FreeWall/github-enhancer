@@ -3,14 +3,16 @@
 var settings = new Settings();
 var stylesContents = {};
 
-chrome.runtime.onInstalled.addListener(function() {
+chrome.runtime.onInstalled.addListener(function(details) {
     chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
         chrome.declarativeContent.onPageChanged.addRules([{
             conditions: [new chrome.declarativeContent.PageStateMatcher({pageUrl: {}})],
             actions: [new chrome.declarativeContent.ShowPageAction()]
         }]);
     });
-    settings.install();
+    if (details.reason == "install") {
+        settings.install();
+    }
     loadSettings();
 });
 
