@@ -146,7 +146,7 @@ function deploymentToRow(deployment, row) {
     $date.html($date.html().replace('updated', 'deployed'));
     let date = new Date(deployment['timestamps']['completed_at']);
     $("relative-time", $date).attr("datetime", deployment['timestamps']['completed_at']).attr("title", date.toLocaleString());
-    $("div.mt-1.text-small", row).html("Deployed by <a class='muted-link' data-hovercard-type='user' href='javascript:void(0);'>" + deployment['deployer'] + "</a> • ");
+    $("div.mt-1.text-small", row).html("Deployed " + deployment['branch'] + " by <a class='muted-link' data-hovercard-type='user' href='javascript:void(0);'>" + deployment['deployer'] + "</a> • ");
     $("div.mt-1.text-small", row).append("<div class='deployment-status' data-status='" + deployment['status'] + "'>" + (deployment['status'].charAt(0).toUpperCase()) + deployment['status'].slice(1) + "</div>");
     $("div.mt-1.text-small", row).append($date);
     row.css("background", "#F4F4F4");
