@@ -38,13 +38,17 @@ div.settings {
     display:table;
     box-sizing:border-box;
     width:100%;
-    padding:6px 10px;
+    padding:6px 13px;
     padding-right:6px;
     background:#FFFFFF;
     border:1px solid #DDDDDD;
     font-weight:600;
     border-radius:4px;
     margin-top:10px;
+}
+.settings .row.enabled {
+    border-left:4px solid #28a745;
+    padding-left:10px;
 }
 .settings label.row {
     cursor:pointer;
@@ -73,7 +77,6 @@ div.settings {
     padding:8px 10px;
     background:#FFFFFF;
     border:1px solid #DDDDDD;
-    border-left:4px solid #CCCCCC;
     border-top:0 none;
     font-size:1em;
     font-weight:400;

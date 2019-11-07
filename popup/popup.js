@@ -3,7 +3,7 @@ var settings = chrome.extension.getBackgroundPage().settings;
 $(function() {
     settings.load(function() {
         for (let i in Settings.VALUES) {
-            $("input[type=checkbox][data-settings=" + Settings.VALUES[i] + "]").prop("checked", settings.get(Settings.VALUES[i]));
+            $("input[type=checkbox][data-settings=" + Settings.VALUES[i] + "]").prop("checked", settings.get(Settings.VALUES[i])).closest("label.row").toggleClass("enabled", settings.get(Settings.VALUES[i]));
         }
     });
 
@@ -40,7 +40,7 @@ $(function() {
                 </div>\
             </div>').show();
             if (typeof deployments[repository] !== "undefined") {
-                $("[data-repository=" + $.escapeSelector(repository) + "]").prop("checked", true);
+                $("[data-repository=" + $.escapeSelector(repository) + "]").prop("checked", true).closest("label.row").toggleClass("enabled", true);
                 $("[data-repository-group=" + $.escapeSelector(repository) + "]").show();
                 for (let key in deployments[repository]) {
                     if (key == "key" && deployments[repository][key].length > 8) {
@@ -55,6 +55,7 @@ $(function() {
 
     $("input[type=checkbox][data-settings]").change(function() {
         settings.set($(this).attr("data-settings"), $(this).is(":checked"));
+        $(this).closest("label.row").toggleClass("enabled", $(this).is(":checked"));
     });
 
     $(document).on("change", "input[type=checkbox][data-repository]", function() {
@@ -62,10 +63,12 @@ $(function() {
             $("[data-repository-group=" + $.escapeSelector($(this).attr("data-repository")) + "]").show();
         } else {
             $("[data-repository-group=" + $.escapeSelector($(this).attr("data-repository")) + "]").hide();
+            $("[data-repository-group=" + $.escapeSelector($(this).attr("data-repository")) + "] [data-repository-settings=key]").val("");
         }
     });
 
     $(document).on("change", "input[data-repository], input[data-repository-settings]", function() {
+        $(this).closest("label.row").toggleClass("enabled", $(this).is(":checked"));
         let deployments = settings.get(Settings.DEPLOYMENTS);
         $("input[data-repository]").each(function() {
             let repository = $(this).attr("data-repository");
