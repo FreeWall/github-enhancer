@@ -4,6 +4,13 @@ body {
     background:#F4F4F4;
     user-select:none;
 }
+a {
+    color:#3367d6;
+    text-decoration:none;
+}
+a:hover {
+    text-decoration:underline;
+}
 div.header {
     padding:20px;
     background:#FFFFFF;
@@ -65,7 +72,13 @@ div.settings {
     vertical-align:middle;
     text-align:right;
 }
+.settings .row .checkbox a {
+    vertical-align:middle;
+    margin-right:4px;
+    padding:8px 4px;
+}
 .settings .row .checkbox input {
+    vertical-align:middle;
     width:14px;
     height:14px;
 }
@@ -85,4 +98,35 @@ div.settings {
 }
 .settings .subrow input:focus {
     outline:none;
+}
+div.editstyles {
+    min-width:400px;
+    padding:20px;
+}
+.editstyles h2 {
+    margin:0px;
+    margin-bottom:12px;
+}
+.editstyles .CodeMirror {
+    width:100%;
+    min-height:400px;
+    background:#FFFFFF;
+    border:1px solid #DDDDDD;
+    margin-bottom:18px;
+    font-size:13px;
+    font-family:monospace;
+}
+@media screen and (min-width:640px) {
+    .editstyles .CodeMirror {
+        min-height:600px;
+    }
+}
+.editstyles button {
+    padding:4px 8px;
+}
+.editstyles button:not([disabled]) {
+    cursor:pointer;
+}
+.editstyles table {
+    border-spacing:0px;
 }

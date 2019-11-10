@@ -50,13 +50,15 @@ Settings.STYLE_PULL_REQUESTS = "stylePullRequests";
 Settings.DRAFTS_TO_BOTTOM = "draftsToBottom";
 Settings.UPDATED_SORT = "updatedSort";
 Settings.DEPLOYMENTS = "deployments";
+Settings.DEPLOYMENTS_STYLES = "deploymentsStyles";
 
 Settings.VALUES = [
     Settings.FULL_WIDTH,
     Settings.STYLE_PULL_REQUESTS,
     Settings.DRAFTS_TO_BOTTOM,
     Settings.UPDATED_SORT,
-    Settings.DEPLOYMENTS
+    Settings.DEPLOYMENTS,
+    Settings.DEPLOYMENTS_STYLES,
 ];
 
 Settings.STYLES = {
