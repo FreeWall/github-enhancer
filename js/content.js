@@ -141,7 +141,7 @@ function deploymentToRow(deployment, row) {
     $(".float-right.col-3", row).remove();
     $("span.labels", row).remove();
     $("a[data-hovercard-type=\"pull_request\"]", row).replaceWith("<div class='h4'>Manual deploy of " + deployment['project']['name'] + "</div>");
-    $("span[aria-label=\"Merged pull request\"],span[aria-label=\"Closed pull request\"]", row).attr("aria-label", "DeployHQ").html("<img src='" + chrome.extension.getURL('static/deployhq.png') + "' style='width:32px;vertical-align:middle;margin-right:7px;margin-left:2px;margin-top:5px;'/>");
+    $("span[aria-label*=\"pull request\"]", row).attr("aria-label", "DeployHQ").html("<img src='" + chrome.extension.getURL('static/deployhq.png') + "' style='width:32px;vertical-align:middle;margin-right:7px;margin-left:2px;margin-top:5px;'/>");
     let $date = $("span.issue-meta-section.ml-2", row).first().clone();
     $date.html($date.html().replace('updated', 'deployed'));
     let date = new Date(deployment['timestamps']['completed_at']);
