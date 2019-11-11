@@ -72,10 +72,14 @@ function loadSettings(reload) {
         });
         for (let key in Settings.STYLES) {
             if (settings.get(key)) {
-                url = chrome.extension.getURL(Settings.STYLES[key]);
-                fetch(url).then(response => response.text()).then(response => {
-                    stylesContents[key] = response;
-                });
+                if (key == Settings.STYLE_PULL_REQUESTS && settings.get(Settings.STYLE_PULL_REQUESTS_CUSTOM)) {
+                    stylesContents[key] = settings.get(Settings.STYLE_PULL_REQUESTS_CUSTOM);
+                } else {
+                    url = chrome.extension.getURL(Settings.STYLES[key]);
+                    fetch(url).then(response => response.text()).then(response => {
+                        stylesContents[key] = response;
+                    });
+                }
             }
         }
         if (reload) {

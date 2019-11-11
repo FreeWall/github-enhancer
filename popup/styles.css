@@ -109,9 +109,10 @@ div.editstyles {
 }
 .editstyles .CodeMirror {
     width:100%;
-    min-height:400px;
+    min-height:380px;
     background:#FFFFFF;
     border:1px solid #DDDDDD;
+    padding:2px;
     margin-bottom:18px;
     font-size:13px;
     font-family:monospace;

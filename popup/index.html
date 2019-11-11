@@ -7,44 +7,44 @@
 	<script src="popup.js"></script>
 </head>
 <body>
-<div class="header">
-	<img src="/static/github-32.png"/><h1>GitHub Enhancer</h1>
-</div>
-<div class="settings">
-	<div class="group">
-		<h2>General</h2>
-		<label class="row">
-			<div class="label">Full width page</div>
-			<div class="checkbox">
-				<input data-settings="fullWidth" type="checkbox"/>
-			</div>
-		</label>
+	<div class="header">
+		<img src="/static/github-32.png"/><h1>GitHub Enhancer</h1>
 	</div>
-	<div class="group">
-		<h2>Pull Requests</h2>
-		<label class="row">
-			<div class="label">Custom CSS styles</div>
-			<div class="checkbox">
-				<a href="editstyles/index.html">Edit file</a>
-				<input data-settings="stylePullRequests" type="checkbox"/>
-			</div>
-		</label>
-		<label class="row">
-			<div class="label">Move Drafts to bottom</div>
-			<div class="checkbox">
-				<input data-settings="draftsToBottom" type="checkbox"/>
-			</div>
-		</label>
-		<label class="row">
-			<div class="label">Default sort by recently updated</div>
-			<div class="checkbox">
-				<input data-settings="updatedSort" type="checkbox"/>
-			</div>
-		</label>
+	<div class="settings">
+		<div class="group">
+			<h2>General</h2>
+			<label class="row">
+				<div class="label">Full width page</div>
+				<div class="checkbox">
+					<input data-settings="fullWidth" type="checkbox"/>
+				</div>
+			</label>
+		</div>
+		<div class="group">
+			<h2>Pull Requests</h2>
+			<label class="row">
+				<div class="label">Custom CSS styles</div>
+				<div class="checkbox">
+					<a href="editstyles/index.html">Edit file</a>
+					<input data-settings="stylePullRequests" type="checkbox"/>
+				</div>
+			</label>
+			<label class="row">
+				<div class="label">Move Drafts to bottom</div>
+				<div class="checkbox">
+					<input data-settings="draftsToBottom" type="checkbox"/>
+				</div>
+			</label>
+			<label class="row">
+				<div class="label">Default sort by recently updated</div>
+				<div class="checkbox">
+					<input data-settings="updatedSort" type="checkbox"/>
+				</div>
+			</label>
+		</div>
+		<div class="group" data-js="deployment-repository" style="display:none">
+			<h2>DeployHQ deployments</h2>
+		</div>
 	</div>
-	<div class="group" data-js="deployment-repository" style="display:none">
-		<h2>DeployHQ deployments</h2>
-	</div>
-</div>
 </body>
 </html>

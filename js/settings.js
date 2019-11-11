@@ -47,18 +47,18 @@ var Settings = function() {
 
 Settings.FULL_WIDTH = "fullWidth";
 Settings.STYLE_PULL_REQUESTS = "stylePullRequests";
+Settings.STYLE_PULL_REQUESTS_CUSTOM = "stylePullRequestsCustom";
 Settings.DRAFTS_TO_BOTTOM = "draftsToBottom";
 Settings.UPDATED_SORT = "updatedSort";
 Settings.DEPLOYMENTS = "deployments";
-Settings.DEPLOYMENTS_STYLES = "deploymentsStyles";
 
 Settings.VALUES = [
     Settings.FULL_WIDTH,
     Settings.STYLE_PULL_REQUESTS,
+    Settings.STYLE_PULL_REQUESTS_CUSTOM,
     Settings.DRAFTS_TO_BOTTOM,
     Settings.UPDATED_SORT,
     Settings.DEPLOYMENTS,
-    Settings.DEPLOYMENTS_STYLES,
 ];
 
 Settings.STYLES = {
