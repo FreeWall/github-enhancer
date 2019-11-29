@@ -25,6 +25,7 @@ chrome.runtime.onMessage.addListener(
                     markRequestsForMe();
                     markDrafts();
                 }
+                loadFileList();
             }
         } else if (request.channel == "settings") {
             updateStyles()
@@ -150,4 +151,65 @@ function deploymentToRow(deployment, row) {
     $("div.mt-1.text-small", row).append("<div class='deployment-status' data-status='" + deployment['status'] + "'>" + (deployment['status'].charAt(0).toUpperCase()) + deployment['status'].slice(1) + "</div>");
     $("div.mt-1.text-small", row).append($date);
     row.css("background", "#F4F4F4");
+}
+
+var fileList = -1;
+function loadFileList() {
+    if (fileList != -1) {
+        renderFileList();
+        return;
+    }
+    let filesUrl = $("body").html().match('src="([^"]*show_toc[^"]*)"');
+    if (filesUrl) {
+        filesUrl = filesUrl[1];
+        $.get(filesUrl, function(response) {
+            fileList = [];
+            $("span.description", response).each(function() {
+
+                fileList.push({
+                    name: $(this).text().trim(),
+                    icon: $(this).parent().prev("svg"),
+                    changes: {
+                        added: $(this).parent().find("span.diffstat span.text-green").text().trim(),
+                        deleted: $(this).parent().find("span.diffstat span.text-red").text().trim(),
+                    }
+                });
+            });
+            renderFileList();
+        });
+    }
+}
+
+function renderFileList() {
+    if ($(".githubenhancer-file-list").length != 0) {
+        return;
+    }
+    let $fileList = $("<div class='githubenhancer-file-list'/>");
+    for (let i in fileList) {
+        let file = $("<div class='githubenhancer-file'/>");
+        file.html("\
+            <div class='githubenhancer-changes'>\
+                <div class='githubenhancer-column githubenhancer-added'>\
+                    " + fileList[i]['changes']['added'] + "\
+                </div><div class='githubenhancer-column githubenhancer-deleted'>\
+                    " + fileList[i]['changes']['deleted'] + "\
+                </div>\
+            </div><div class='githubenhancer-icon'>\
+            </div><div class='githubenhancer-name'>\
+                " + fileList[i]['name'] + "\
+            </div>\
+        ");
+        if (fileList[i]['icon'].hasClass("octicon-diff-added")) {
+            $(".githubenhancer-icon", file).toggleClass("icon-added", true);
+        } else if (fileList[i]['icon'].hasClass("octicon-diff-modified")) {
+            $(".githubenhancer-icon", file).toggleClass("icon-modified", true);
+        } else if (fileList[i]['icon'].hasClass("octicon-diff-removed")) {
+            $(".githubenhancer-icon", file).toggleClass("icon-removed", true);
+        }
+        let icon = fileList[i]['icon'].clone();
+        icon.removeClass();
+        $(".githubenhancer-icon", file).html(icon);
+        $fileList.append(file);
+    }
+    $("div.pr-toolbar").after($fileList);
 }
