@@ -30,7 +30,7 @@ $(function() {
             </label>\
             <div class="subgroup" data-repository-group="' + repository + '" style="display:none">\
                 <div class="subrow">\
-                    <input data-repository-settings="url" placeholder="https://deployhq.com/projects/your-project/" type="text"/>\
+                    <input data-repository-settings="url" placeholder="https://your-domain.deployhq.com/projects/your-project/deployments/" type="text"/>\
                 </div>\
                 <div class="subrow">\
                     <input data-repository-settings="user" placeholder="E-mail address" type="text"/>\
