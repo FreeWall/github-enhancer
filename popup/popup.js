@@ -65,7 +65,7 @@ $(function() {
     });
 
     $("input[type=text][data-settings]").change(function() {
-        if ($(this).val().indexOf("*") !== -1) {
+        if ($(this).val().indexOf("*") === -1) {
             settings.set($(this).attr("data-settings"), $(this).val());
         }
     });
