@@ -240,7 +240,7 @@ function renderFileList() {
             </div><div class='githubenhancer-icon icon-" + pullRequestFiles[i]['status'] + "'>\
                 " + fileStatusIcon[pullRequestFiles[i]['status']] + "\
             </div><div class='githubenhancer-name'>\
-                " + pullRequestFiles[i]['filename'] + "\
+                <a href='javascript:void(0);'>" + pullRequestFiles[i]['filename'] + "</a>\
             </div>\
         ");
         $fileList.append(file);
@@ -248,3 +248,10 @@ function renderFileList() {
 
     $("div.pr-toolbar").after($fileList);
 }
+
+$(document).on("click", ".githubenhancer-name", function() {
+    let link = $("a[title="+CSS.escape($(this).text().trim())+"]");
+    if (link.length == 1) {
+        location.href = link.attr("href");
+    }
+});
