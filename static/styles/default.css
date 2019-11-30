@@ -12,3 +12,56 @@ div.deployment-status {
 div.deployment-status[data-status="completed"] {
     background: #28a745;
 }
+div.githubenhancer-file-list {
+    margin-bottom:20px;
+}
+.githubenhancer-file-list .githubenhancer-file {
+}
+.githubenhancer-file-list .githubenhancer-file .githubenhancer-changes {
+    display:inline-block;
+    margin-right:6px;
+}
+.githubenhancer-file-list .githubenhancer-file .githubenhancer-changes .githubenhancer-column {
+    display:inline-block;
+    vertical-align:middle;
+    width:42px;
+    margin-right:3px;
+    font-size:12px;
+    font-family:Consolas,monospace;
+    text-align:center;
+    border-radius:2px;
+}
+.githubenhancer-file-list .githubenhancer-file .githubenhancer-changes .githubenhancer-added {
+    color:#28a745;
+    background:#cdffd8;
+}
+.githubenhancer-file-list .githubenhancer-file .githubenhancer-changes .githubenhancer-deleted {
+    color:#cb2431;
+    background:#ffdce0;
+}
+.githubenhancer-file-list .githubenhancer-file .githubenhancer-icon {
+    display:inline-block;
+    vertical-align:middle;
+    margin-right:8px;
+    line-height:0em;
+}
+.githubenhancer-file-list .githubenhancer-file .githubenhancer-icon svg {
+    fill:currentColor;
+    vertical-align:middle;
+}
+.githubenhancer-file-list .githubenhancer-file .githubenhancer-icon.icon-added svg {
+    color:#28a745;
+}
+.githubenhancer-file-list .githubenhancer-file .githubenhancer-icon.icon-modified svg {
+    color:#dbab09;
+}
+.githubenhancer-file-list .githubenhancer-file .githubenhancer-icon.icon-removed svg {
+    color:#cb2431;
+}
+.githubenhancer-file-list .githubenhancer-file .githubenhancer-name {
+    display:inline-block;
+    vertical-align:middle;
+    color:#586069;
+    font-size:12px;
+    font-family:Consolas,monospace;
+}

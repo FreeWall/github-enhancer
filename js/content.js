@@ -14,6 +14,9 @@ chrome.runtime.onMessage.addListener(
                 if (request.settings[Settings.UPDATED_SORT]) {
                     sortByRecentlyUpdated();
                 }
+                if (request.settings[Settings.PULL_REQUEST_FILES]) {
+                    loadFileList();
+                }
             } else if (request.status == "complete") {
                 if (request.settings[Settings.DEPLOYMENTS]) {
                     renderDeployments();
@@ -25,7 +28,9 @@ chrome.runtime.onMessage.addListener(
                     markRequestsForMe();
                     markDrafts();
                 }
-                loadFileList();
+                if (request.settings[Settings.PULL_REQUEST_FILES]) {
+                    renderFileList();
+                }
             }
         } else if (request.channel == "settings") {
             updateStyles()
@@ -153,82 +158,93 @@ function deploymentToRow(deployment, row) {
     row.css("background", "#F4F4F4");
 }
 
-var fileList = -1;
+var pullRequestFiles = -1;
+var pullRequestFilesLoading = false;
 function loadFileList() {
-    if (fileList != -1) {
-        renderFileList();
+    if (pullRequestFilesLoading) {
         return;
     }
-    let filesUrl = $("body").html().match('src="([^"]*show_toc[^"]*)"');
-    if (filesUrl) {
-        filesUrl = filesUrl[1];
-        $.get(filesUrl, function(response) {
-            fileList = [];
-            $("span.description", response).each(function() {
-                fileList.push({
-                    name: $(this).text().trim(),
-                    icon: $(this).parent().prev("svg"),
-                    changes: {
-                        added: $(this).parent().find("span.diffstat span.text-green").text().trim(),
-                        deleted: $(this).parent().find("span.diffstat span.text-red").text().trim(),
-                    }
-                });
-            });
-            renderFileList();
+    if (!settings[Settings.GITHUB_TOKEN] || settings[Settings.GITHUB_TOKEN].length == 0) {
+        return;
+    }
+    let results = location.href.match('\/github\.com\/([a-zA-Z0-9-_.]*/[a-zA-Z0-9-_.]*)\/pull\/(\\d+)');
+    if (results) {
+        pullRequestFilesLoading = true;
+        let repository = results[1];
+        let pullId = results[2];
+        pullRequestFiles = [];
+        loadFileListPage(repository, pullId, 1, function(files) {
+            if (files) {
+                pullRequestFiles.push(...files);
+                renderFileList();
+            }
         });
     }
 }
 
+function loadFileListPage(repository, pullId, page, doneCallback) {
+    fetch("https://api.github.com/repos/" + repository + "/pulls/" + pullId + "/files?page=" + page, {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'token ' + settings[Settings.GITHUB_TOKEN],
+        }
+    })
+    .then(function(response) {
+        if (response.status != 200) {
+            doneCallback(null);
+            return;
+        }
+        response.json().then(data => {
+            doneCallback(data);
+        });
+        let links = response.headers.get('Link');
+        if (links) {
+            let nextPage = links.match('<.*page=(\\d+)>; rel="next"');
+            if (nextPage) {
+                nextPage = Number(nextPage[1]);
+                loadFileListPage(repository, pullId, nextPage, doneCallback);
+            }
+        }
+    });
+}
+
+var fileStatusIcon = {
+    added: '<svg title="added" viewBox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13 1H1c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V2c0-.55-.45-1-1-1zm0 13H1V2h12v12zM6 9H3V7h3V4h2v3h3v2H8v3H6V9z"></path></svg>',
+    modified: '<svg title="modified" viewBox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13 1H1c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V2c0-.55-.45-1-1-1zm0 13H1V2h12v12zM4 8c0-1.66 1.34-3 3-3s3 1.34 3 3-1.34 3-3 3-3-1.34-3-3z"></path></svg>',
+    renamed: '<svg title="renamed" viewBox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M6 9H3V7h3V4l5 4-5 4V9zm8-7v12c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V2c0-.55.45-1 1-1h12c.55 0 1 .45 1 1zm-1 0H1v12h12V2z"></path></svg>',
+    removed: '<svg title="removed" viewBox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13 1H1c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V2c0-.55-.45-1-1-1zm0 13H1V2h12v12zm-2-5H3V7h8v2z"></path></svg>',
+};
+
 function renderFileList() {
-    if ($(".githubenhancer-file-list").length != 0) {
+    if (pullRequestFiles == -1) {
+        setTimeout(renderFileList, 100);
         return;
     }
+    if (pullRequestFiles == null || pullRequestFiles.length == 0) {
+        return;
+    }
+    if ($(".githubenhancer-file-list").length != 0) {
+        $(".githubenhancer-file-list").remove();
+    }
     let $fileList = $("<div class='githubenhancer-file-list'/>");
-    for (let i in fileList) {
+    for (let i in pullRequestFiles) {
         let file = $("<div class='githubenhancer-file'/>");
         file.html("\
             <div class='githubenhancer-changes'>\
                 <div class='githubenhancer-column githubenhancer-added'>\
-                    " + fileList[i]['changes']['added'] + "\
+                    +" + pullRequestFiles[i]['additions'] + "\
                 </div><div class='githubenhancer-column githubenhancer-deleted'>\
-                    " + fileList[i]['changes']['deleted'] + "\
+                    -" + pullRequestFiles[i]['deletions'] + "\
                 </div>\
-            </div><div class='githubenhancer-icon'>\
+            </div><div class='githubenhancer-icon icon-" + pullRequestFiles[i]['status'] + "'>\
+                " + fileStatusIcon[pullRequestFiles[i]['status']] + "\
             </div><div class='githubenhancer-name'>\
-                " + fileList[i]['name'] + "\
+                " + pullRequestFiles[i]['filename'] + "\
             </div>\
         ");
-        //a857d246bfe0d0d98f0272b2644a17e0c3a14d14
-        if (fileList[i]['icon'].hasClass("octicon-diff-added")) {
-            $(".githubenhancer-icon", file).toggleClass("icon-added", true);
-        } else if (fileList[i]['icon'].hasClass("octicon-diff-modified")) {
-            $(".githubenhancer-icon", file).toggleClass("icon-modified", true);
-        } else if (fileList[i]['icon'].hasClass("octicon-diff-removed")) {
-            $(".githubenhancer-icon", file).toggleClass("icon-removed", true);
-        }
-        let icon = fileList[i]['icon'].clone();
-        icon.removeClass();
-        $(".githubenhancer-icon", file).html(icon);
         $fileList.append(file);
     }
-    $("div.pr-toolbar").after($fileList);
-}
 
-function renderFileList2() {
-    if ($(".githubenhancer-file-list").length != 0) {
-        return;
-    }
-    fileList = [];
-    $(".file-info").each(function() {
-        let name = $(this).find("a").text();
-        fileList.push({
-            name: $(this).find("a").text(),
-            icon: $(this).find("Bagsdfgdfg"),
-            changes: {
-                added: $(this).parent().find("span.diffstat span.text-green").text().trim(),
-                deleted: $(this).parent().find("span.diffstat span.text-red").text().trim(),
-            }
-        })
-    });
-    renderFileList();
+    $("div.pr-toolbar").after($fileList);
 }

@@ -3,7 +3,13 @@ var settings = chrome.extension.getBackgroundPage().settings;
 $(function() {
     settings.load(function() {
         for (let i in Settings.VALUES) {
-            $("input[type=checkbox][data-settings=" + Settings.VALUES[i] + "]").prop("checked", settings.get(Settings.VALUES[i])).closest("label.row").toggleClass("enabled", settings.get(Settings.VALUES[i]));
+            $("input[type=checkbox][data-settings=" + Settings.VALUES[i] + "]").prop("checked", !!settings.get(Settings.VALUES[i])).closest("label.row").toggleClass("enabled", !!settings.get(Settings.VALUES[i]));
+            $("input[type=text][data-settings=" + Settings.VALUES[i] + "]").val(settings.get(Settings.VALUES[i]));
+            console.log(i);
+            if (Settings.VALUES[i] == Settings.GITHUB_TOKEN && settings.get(Settings.VALUES[i]) && settings.get(Settings.VALUES[i]).length > 8) {
+                let stars = settings.get(Settings.VALUES[i]).length - 8;
+                $("input[type=text][data-settings=" + Settings.VALUES[i] + "]").val(settings.get(Settings.VALUES[i]).substr(0, 4) + "*".repeat(stars) + settings.get(Settings.VALUES[i]).substr(-4));
+            }
         }
     });
 
@@ -22,7 +28,7 @@ $(function() {
         }
         for (let repository in deployments) {
             $("[data-js=deployment-repository]").append('\
-            <label class="row double">\
+            <label class="row">\
                 <div class="label">' + repository + '</div>\
                 <div class="checkbox">\
                     <input data-repository="' + repository + '" type="checkbox"/>\
@@ -56,6 +62,12 @@ $(function() {
     $("input[type=checkbox][data-settings]").change(function() {
         settings.set($(this).attr("data-settings"), $(this).is(":checked"));
         $(this).closest("label.row").toggleClass("enabled", $(this).is(":checked"));
+    });
+
+    $("input[type=text][data-settings]").change(function() {
+        if ($(this).val().indexOf("*") !== -1) {
+            settings.set($(this).attr("data-settings"), $(this).val());
+        }
     });
 
     $(document).on("change", "input[type=checkbox][data-repository]", function() {

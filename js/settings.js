@@ -5,12 +5,24 @@ var Settings = function() {
     this.onChangeCallback = function() {};
 
     this.install = function() {
+        this.values = {};
         this.values[Settings.FULL_WIDTH] = true;
+        this.values[Settings.PULL_REQUEST_FILES] = false;
         this.values[Settings.STYLE_PULL_REQUESTS] = true;
         this.values[Settings.DRAFTS_TO_BOTTOM] = true;
         this.values[Settings.UPDATED_SORT] = true;
         this.values[Settings.DEPLOYMENTS] = {};
         this.save();
+    };
+
+    this.update = function() {
+        this.load(function() {
+            if (typeof this.values[Settings.FULL_WIDTH] === "undefined") this.values[Settings.FULL_WIDTH] = true;
+            if (typeof this.values[Settings.STYLE_PULL_REQUESTS] === "undefined") this.values[Settings.STYLE_PULL_REQUESTS] = true;
+            if (typeof this.values[Settings.DRAFTS_TO_BOTTOM] === "undefined") this.values[Settings.DRAFTS_TO_BOTTOM] = true;
+            if (typeof this.values[Settings.UPDATED_SORT] === "undefined") this.values[Settings.UPDATED_SORT] = true;
+            this.save();
+        }.bind(this));
     };
 
     this.load = function(callback) {
@@ -46,6 +58,8 @@ var Settings = function() {
 };
 
 Settings.FULL_WIDTH = "fullWidth";
+Settings.PULL_REQUEST_FILES = "pullRequestFiles";
+Settings.GITHUB_TOKEN = "githubToken";
 Settings.STYLE_PULL_REQUESTS = "stylePullRequests";
 Settings.STYLE_PULL_REQUESTS_CUSTOM = "stylePullRequestsCustom";
 Settings.DRAFTS_TO_BOTTOM = "draftsToBottom";
@@ -54,6 +68,8 @@ Settings.DEPLOYMENTS = "deployments";
 
 Settings.VALUES = [
     Settings.FULL_WIDTH,
+    Settings.PULL_REQUEST_FILES,
+    Settings.GITHUB_TOKEN,
     Settings.STYLE_PULL_REQUESTS,
     Settings.STYLE_PULL_REQUESTS_CUSTOM,
     Settings.DRAFTS_TO_BOTTOM,

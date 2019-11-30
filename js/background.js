@@ -12,6 +12,8 @@ chrome.runtime.onInstalled.addListener(function(details) {
     });
     if (details.reason == "install") {
         settings.install();
+    } else if (details.reason == "update") {
+        settings.update();
     }
     loadSettings();
 });
@@ -19,15 +21,6 @@ chrome.runtime.onInstalled.addListener(function(details) {
 chrome.runtime.onStartup.addListener(function() {
     loadSettings();
 });
-
-chrome.webRequest.onCompleted.addListener(
-    function(details) {
-        console.log('onCompleted', details);
-    },
-    {urls: []},
-    []
-);
-
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
@@ -43,9 +36,9 @@ chrome.runtime.onMessage.addListener(
                             'Authorization': 'Basic ' + btoa(settings.get(Settings.DEPLOYMENTS)[repository]['user'] + ":" + settings.get(Settings.DEPLOYMENTS)[repository]['key']),
                         }
                     })
-                        .then(response => response.json())
-                        .then(response => sendResponse(response))
-                        .catch(error => sendResponse({}));
+                    .then(response => response.json())
+                    .then(response => sendResponse(response))
+                    .catch(error => sendResponse({}));
                 } else {
                     sendResponse({});
                 }
