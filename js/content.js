@@ -167,7 +167,34 @@ function loadFileList() {
     if (!settings[Settings.GITHUB_TOKEN] || settings[Settings.GITHUB_TOKEN].length == 0) {
         return;
     }
-    let results = location.href.match('\/github\.com\/([a-zA-Z0-9-_.]*/[a-zA-Z0-9-_.]*)\/pull\/(\\d+)');
+    if (location.href.match('\/github\.com\/([a-zA-Z0-9-_.]*\/[a-zA-Z0-9-_.]*)\/pull\/(\\d+)\/files\/(.+)')) {
+        return;
+    }
+    let results = location.href.match('\/github\.com\/([a-zA-Z0-9-_.]*\/[a-zA-Z0-9-_.]*)\/pull\/(\\d+)\/commits\/(.*)');
+    if (results) {
+        let repository = results[1];
+        let commits = results[3];
+        pullRequestFilesLoading = true;
+        pullRequestFiles = [];
+        fetch("https://api.github.com/repos/" + repository + "/commits/" + commits, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'token ' + settings[Settings.GITHUB_TOKEN],
+            }
+        })
+        .then(function(response) {
+            if (response.status != 200) {
+                return;
+            }
+            response.json().then(data => {
+                pullRequestFiles = data['files'];
+                renderFileList();
+            });
+        });
+        return;
+    }
+    results = location.href.match('\/github\.com\/([a-zA-Z0-9-_.]*\/[a-zA-Z0-9-_.]*)\/pull\/(\\d+)');
     if (results) {
         pullRequestFilesLoading = true;
         let repository = results[1];
@@ -224,9 +251,8 @@ function renderFileList() {
     if (pullRequestFiles == null || pullRequestFiles.length == 0) {
         return;
     }
-    if ($(".githubenhancer-file-list").length != 0) {
-        $(".githubenhancer-file-list").remove();
-    }
+    pullRequestFilesLoading = false;
+    $(".githubenhancer-file-list").remove();
     let $fileList = $("<div class='githubenhancer-file-list'/>");
     for (let i in pullRequestFiles) {
         let file = $("<div class='githubenhancer-file'/>");
