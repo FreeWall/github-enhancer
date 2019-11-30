@@ -165,7 +165,6 @@ function loadFileList() {
         $.get(filesUrl, function(response) {
             fileList = [];
             $("span.description", response).each(function() {
-
                 fileList.push({
                     name: $(this).text().trim(),
                     icon: $(this).parent().prev("svg"),
@@ -199,6 +198,7 @@ function renderFileList() {
                 " + fileList[i]['name'] + "\
             </div>\
         ");
+        //a857d246bfe0d0d98f0272b2644a17e0c3a14d14
         if (fileList[i]['icon'].hasClass("octicon-diff-added")) {
             $(".githubenhancer-icon", file).toggleClass("icon-added", true);
         } else if (fileList[i]['icon'].hasClass("octicon-diff-modified")) {
@@ -212,4 +212,23 @@ function renderFileList() {
         $fileList.append(file);
     }
     $("div.pr-toolbar").after($fileList);
+}
+
+function renderFileList2() {
+    if ($(".githubenhancer-file-list").length != 0) {
+        return;
+    }
+    fileList = [];
+    $(".file-info").each(function() {
+        let name = $(this).find("a").text();
+        fileList.push({
+            name: $(this).find("a").text(),
+            icon: $(this).find("Bagsdfgdfg"),
+            changes: {
+                added: $(this).parent().find("span.diffstat span.text-green").text().trim(),
+                deleted: $(this).parent().find("span.diffstat span.text-red").text().trim(),
+            }
+        })
+    });
+    renderFileList();
 }

@@ -20,6 +20,15 @@ chrome.runtime.onStartup.addListener(function() {
     loadSettings();
 });
 
+chrome.webRequest.onCompleted.addListener(
+    function(details) {
+        console.log('onCompleted', details);
+    },
+    {urls: []},
+    []
+);
+
+
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         if (request.channel == "deployments") {

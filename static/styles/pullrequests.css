@@ -63,7 +63,7 @@ div.githubenhancer-file-list {
 .githubenhancer-file-list .githubenhancer-file .githubenhancer-icon {
     display:inline-block;
     vertical-align:middle;
-    margin-right:6px;
+    margin-right:8px;
     line-height:0em;
 }
 .githubenhancer-file-list .githubenhancer-file .githubenhancer-icon svg {
