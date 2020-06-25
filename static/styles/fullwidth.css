@@ -1,8 +1,6 @@
-body:not(.full-width) .container-lg {
+.container-xl {
     max-width: 90%;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
 }
-.container {
-    width: 90%;
+.wiki-rightbar {
+    width: auto !important;
 }
