@@ -167,9 +167,9 @@ function loadFileList() {
     if (!settings[Settings.GITHUB_TOKEN] || settings[Settings.GITHUB_TOKEN].length == 0) {
         return;
     }
-    if (location.href.match('\/github\.com\/([a-zA-Z0-9-_.]*\/[a-zA-Z0-9-_.]*)\/pull\/(\\d+)\/files\/(.+)')) {
+    /*if (location.href.match('\/github\.com\/([a-zA-Z0-9-_.]*\/[a-zA-Z0-9-_.]*)\/pull\/(\\d+)\/files\/(.+)')) {
         return;
-    }
+    }*/
     let results = location.href.match('\/github\.com\/([a-zA-Z0-9-_.]*\/[a-zA-Z0-9-_.]*)\/pull\/(\\d+)\/commits\/(.*)');
     if (results) {
         let repository = results[1];
@@ -192,6 +192,32 @@ function loadFileList() {
                 renderFileList();
             });
         });
+        return;
+    }
+    results = location.href.match('\/github\.com\/([a-zA-Z0-9-_.]*\/[a-zA-Z0-9-_.]*)\/pull\/(\\d+)\/files\/([a-f0-9]{40})\.\.([a-f0-9]{40})');
+    if (results) {
+        let repository = results[1];
+        let commit1 = results[3];
+        let commit2 = results[4];
+        pullRequestFilesLoading = true;
+        pullRequestFiles = [];
+        fetch("https://api.github.com/repos/" + repository + "/compare/" + commit1 + "..." + commit2, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'token ' + settings[Settings.GITHUB_TOKEN],
+            }
+        })
+        .then(function(response) {
+            if (response.status != 200) {
+                return;
+            }
+            response.json().then(data => {
+                pullRequestFiles = data['files'];
+                renderFileList();
+            });
+        });
+        //a3166ba7e7f95120dfeb715b80d013d282fb3675
         return;
     }
     results = location.href.match('\/github\.com\/([a-zA-Z0-9-_.]*\/[a-zA-Z0-9-_.]*)\/pull\/(\\d+)');
